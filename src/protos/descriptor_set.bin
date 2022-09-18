@@ -1,0 +1,44 @@
+
+¾
+google/protobuf/empty.protogoogle.protobuf"
+EmptyB}
+com.google.protobufB
+EmptyProtoPZ.google.golang.org/protobuf/types/known/emptypbø¢GPBªGoogle.Protobuf.WellKnownTypesbproto3
+–	
+src/protos/action.protoAiiiGRPCgoogle/protobuf/empty.proto"J
+Item
+name (	Rname
+price (Rprice
+message (	Rmessage",
+List$
+items (2.AiiiGRPC.ItemRitems"H
+Filter
+name (	Rname
+price (Rprice
+opStr (	RopStr"N
+Member
+name (	Rname
+type (Rtype
+	timestamp (	R	timestamp"e
+Log
+category (	Rcategory
+action (	Raction
+label (	Rlabel
+value (	Rvalue"b
+
+CircleInfo
+	colorCode (	R	colorCode
+x (Rx
+y (Ry
+isFinish (RisFinish"H
+CircleInfoList6
+circleInfos (2.AiiiGRPC.CircleInfoRcircleInfos2¢
+ToDoService.
+UnaryAddItem.AiiiGRPC.Item.AiiiGRPC.ListB
+ClientStreamingAddItem.AiiiGRPC.Item.google.protobuf.Empty(<
+ServerStreamingSubList.AiiiGRPC.Filter.AiiiGRPC.Item0E
+BidirectionalStreamingAsyncList.AiiiGRPC.Item.AiiiGRPC.Item(0@
+UnaryAddMemberRecord.AiiiGRPC.Member.google.protobuf.Empty@
+ClientStreamingAddLog.AiiiGRPC.Log.google.protobuf.Empty(L
+ServerStreamingSubMemberRecord.google.protobuf.Empty.AiiiGRPC.Member0H
+BidiCircleInfoData.AiiiGRPC.CircleInfo.AiiiGRPC.CircleInfoList(0bproto3

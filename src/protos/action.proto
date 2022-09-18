@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package AiiiGRPC;
+
+message Item {
+    string name = 1;
+    int32 price = 2;
+    string message = 3;
+}
+
+message List {
+    repeated Item items = 1;
+}
+
+message Filter {
+    string name = 1;
+    int32 price = 2;
+    string opStr = 3;
+}
+
+
+message Member { // member
+    string name = 1;
+    int32 type = 2;
+    string timestamp = 3;
+}
+
+message Log {
+  string category = 1;
+  string action = 2;
+  string label = 3;
+  string value = 4;
+}
+
+message CircleInfo {
+    string colorCode = 1;
+    int32 x = 2;
+    int32 y = 3;
+    bool isFinish = 4;
+}
+
+
+message CircleInfoList {
+    repeated CircleInfo circleInfos = 1;
+}
+
+
+service ToDoService {
+    rpc UnaryAddItem (Item) returns (List);
+    rpc ClientStreamingAddItem (stream Item) returns (google.protobuf.Empty);
+    rpc ServerStreamingSubList (Filter) returns (stream Item);
+    rpc BidirectionalStreamingAsyncList (stream Item) returns (stream Item);
+
+    rpc UnaryAddMemberRecord (Member) returns (google.protobuf.Empty);
+    rpc ClientStreamingAddLog (stream Log) returns (google.protobuf.Empty);
+    rpc ServerStreamingSubMemberRecord (google.protobuf.Empty) returns (stream Member);
+
+    rpc BidiCircleInfoData(stream CircleInfo) returns (stream CircleInfoList);
+}
