@@ -1,14 +1,13 @@
 {
-    "name": "node-grpc",
+    "name": "circle-for-grpc",
     "version": "1.0.0",
-    "description": "node-grpc",
+    "description": "circle-for-grpc",
     "config": {
-        "image": "asia-east1-docker.pkg.dev/aiii-bot-platform/cloud-run-source-deploy/node-grpc"
+        "image": "asia-east1-docker.pkg.dev/aiii-bot-platform/cloud-run-source-deploy/circle-for-grpc"
     },
     "scripts": {
         "start": "node lib/src/server.js",
         "start:server": "node lib/src/server.js",
-        "start:client": "node lib/src/client.js",
         "start:web": "python3 -m http.server 8081  --directory web",
         "lint": "tslint --project tsconfig.json",
         "build": "tsc && copyfiles -u 1 src/protos/** lib/src/",

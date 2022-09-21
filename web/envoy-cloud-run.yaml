@@ -53,7 +53,7 @@ static_resources:
               - endpoint:
                   address:
                     socket_address:
-                      address: node-grpc-dnz3lqp74q-de.a.run.app
+                      address: circle-for-grpc-dnz3lqp74q-de.a.run.app
                       port_value: 443
       dns_lookup_family: V4_ONLY
       transport_socket:
@@ -65,4 +65,4 @@ static_resources:
             validation_context:
               trusted_ca:
                 filename: /etc/ssl/certs/ca-certificates.crt
-          sni: node-grpc-dnz3lqp74q-de.a.run.app
+          sni: circle-for-grpc-dnz3lqp74q-de.a.run.app
