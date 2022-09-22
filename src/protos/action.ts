@@ -2,6 +2,7 @@
 import * as Long from "long";
 import * as _m0 from "protobufjs/minimal";
 import { Observable } from "rxjs";
+import { Empty } from "../../google/protobuf/empty";
 import { map } from "rxjs/operators";
 
 export const protobufPackage = "AiiiGRPC";
@@ -165,6 +166,8 @@ export interface ToDoService {
   BidiCircleInfoData(
     request: Observable<CircleInfo>
   ): Observable<CircleInfoList>;
+  UnaryCircleInfoData(request: CircleInfo): Promise<Empty>;
+  ServerStreamCircleInfoData(request: CircleInfo): Observable<CircleInfoList>;
 }
 
 export class ToDoServiceClientImpl implements ToDoService {
@@ -172,6 +175,9 @@ export class ToDoServiceClientImpl implements ToDoService {
   constructor(rpc: Rpc) {
     this.rpc = rpc;
     this.BidiCircleInfoData = this.BidiCircleInfoData.bind(this);
+    this.UnaryCircleInfoData = this.UnaryCircleInfoData.bind(this);
+    this.ServerStreamCircleInfoData =
+      this.ServerStreamCircleInfoData.bind(this);
   }
   BidiCircleInfoData(
     request: Observable<CircleInfo>
@@ -182,6 +188,28 @@ export class ToDoServiceClientImpl implements ToDoService {
     const result = this.rpc.bidirectionalStreamingRequest(
       "AiiiGRPC.ToDoService",
       "BidiCircleInfoData",
+      data
+    );
+    return result.pipe(
+      map((data) => CircleInfoList.decode(new _m0.Reader(data)))
+    );
+  }
+
+  UnaryCircleInfoData(request: CircleInfo): Promise<Empty> {
+    const data = CircleInfo.encode(request).finish();
+    const promise = this.rpc.request(
+      "AiiiGRPC.ToDoService",
+      "UnaryCircleInfoData",
+      data
+    );
+    return promise.then((data) => Empty.decode(new _m0.Reader(data)));
+  }
+
+  ServerStreamCircleInfoData(request: CircleInfo): Observable<CircleInfoList> {
+    const data = CircleInfo.encode(request).finish();
+    const result = this.rpc.serverStreamingRequest(
+      "AiiiGRPC.ToDoService",
+      "ServerStreamCircleInfoData",
       data
     );
     return result.pipe(

@@ -1,8 +1,9 @@
 import { ServerWritableStream } from "grpc";
 import { CircleInfo } from '../../../protos/action';
 import { Subject } from "rxjs";
+import { circleInfos } from "../../../cache/circleInfo";
 
-const circleInfos: CircleInfo[] = [];
+
 const subject = new Subject<CircleInfo>();
 const callMap = new Map<string,any>();
 export const BidiCircleInfoData = async (call: ServerWritableStream<CircleInfo>) => {
