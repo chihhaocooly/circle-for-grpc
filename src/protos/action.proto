@@ -20,4 +20,13 @@ message CircleInfoList {
 
 service ToDoService {
     rpc BidiCircleInfoData(stream CircleInfo) returns (stream CircleInfoList);
+
+    //TODO:
+    //把BidiCircleInfoData拆解成兩個方法
+
+    //分別為
+    //1.UnaryCircleInfoData => input: CircleInfo  output:null(回憶看看，在proto可以定位為何種型別)
+
+    
+    //2.ServerStreamCircleInfoData => input: CircleInfo  output:CircleInfoList
 }
