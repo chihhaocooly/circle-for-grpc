@@ -1,9 +1,7 @@
 /* eslint-disable */
-import * as Long from "long";
+import { CallContext, CallOptions } from "nice-grpc-common";
 import * as _m0 from "protobufjs/minimal";
-import { Observable } from "rxjs";
-import { Empty } from "../../google/protobuf/empty";
-import { map } from "rxjs/operators";
+import { Empty } from "./google/protobuf/empty";
 
 export const protobufPackage = "AiiiGRPC";
 
@@ -23,10 +21,7 @@ function createBaseCircleInfo(): CircleInfo {
 }
 
 export const CircleInfo = {
-  encode(
-    message: CircleInfo,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: CircleInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.colorCode !== "") {
       writer.uint32(10).string(message.colorCode);
     }
@@ -87,9 +82,7 @@ export const CircleInfo = {
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<CircleInfo>, I>>(
-    object: I
-  ): CircleInfo {
+  fromPartial(object: DeepPartial<CircleInfo>): CircleInfo {
     const message = createBaseCircleInfo();
     message.colorCode = object.colorCode ?? "";
     message.x = object.x ?? 0;
@@ -104,10 +97,7 @@ function createBaseCircleInfoList(): CircleInfoList {
 }
 
 export const CircleInfoList = {
-  encode(
-    message: CircleInfoList,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: CircleInfoList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.circleInfos) {
       CircleInfo.encode(v!, writer.uint32(10).fork()).ldelim();
     }
@@ -134,147 +124,92 @@ export const CircleInfoList = {
 
   fromJSON(object: any): CircleInfoList {
     return {
-      circleInfos: Array.isArray(object?.circleInfos)
-        ? object.circleInfos.map((e: any) => CircleInfo.fromJSON(e))
-        : [],
+      circleInfos: Array.isArray(object?.circleInfos) ? object.circleInfos.map((e: any) => CircleInfo.fromJSON(e)) : [],
     };
   },
 
   toJSON(message: CircleInfoList): unknown {
     const obj: any = {};
     if (message.circleInfos) {
-      obj.circleInfos = message.circleInfos.map((e) =>
-        e ? CircleInfo.toJSON(e) : undefined
-      );
+      obj.circleInfos = message.circleInfos.map((e) => e ? CircleInfo.toJSON(e) : undefined);
     } else {
       obj.circleInfos = [];
     }
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<CircleInfoList>, I>>(
-    object: I
-  ): CircleInfoList {
+  fromPartial(object: DeepPartial<CircleInfoList>): CircleInfoList {
     const message = createBaseCircleInfoList();
-    message.circleInfos =
-      object.circleInfos?.map((e) => CircleInfo.fromPartial(e)) || [];
+    message.circleInfos = object.circleInfos?.map((e) => CircleInfo.fromPartial(e)) || [];
     return message;
   },
 };
 
-export interface ToDoService {
-  BidiCircleInfoData(
-    request: Observable<CircleInfo>
-  ): Observable<CircleInfoList>;
-  UnaryCircleInfoData(request: CircleInfo): Promise<Empty>;
-  ServerStreamCircleInfoData(request: CircleInfo): Observable<CircleInfoList>;
+export type ToDoServiceDefinition = typeof ToDoServiceDefinition;
+export const ToDoServiceDefinition = {
+  name: "ToDoService",
+  fullName: "AiiiGRPC.ToDoService",
+  methods: {
+    bidiCircleInfoData: {
+      name: "BidiCircleInfoData",
+      requestType: CircleInfo,
+      requestStream: true,
+      responseType: CircleInfoList,
+      responseStream: true,
+      options: {},
+    },
+    unaryCircleInfoData: {
+      name: "UnaryCircleInfoData",
+      requestType: CircleInfo,
+      requestStream: false,
+      responseType: Empty,
+      responseStream: false,
+      options: {},
+    },
+    serverStreamCircleInfoData: {
+      name: "ServerStreamCircleInfoData",
+      requestType: CircleInfo,
+      requestStream: false,
+      responseType: CircleInfoList,
+      responseStream: true,
+      options: {},
+    },
+  },
+} as const;
+
+export interface ToDoServiceServiceImplementation<CallContextExt = {}> {
+  bidiCircleInfoData(
+    request: AsyncIterable<CircleInfo>,
+    context: CallContext & CallContextExt,
+  ): ServerStreamingMethodResult<DeepPartial<CircleInfoList>>;
+  unaryCircleInfoData(request: CircleInfo, context: CallContext & CallContextExt): Promise<DeepPartial<Empty>>;
+  serverStreamCircleInfoData(
+    request: CircleInfo,
+    context: CallContext & CallContextExt,
+  ): ServerStreamingMethodResult<DeepPartial<CircleInfoList>>;
 }
 
-export class ToDoServiceClientImpl implements ToDoService {
-  private readonly rpc: Rpc;
-  constructor(rpc: Rpc) {
-    this.rpc = rpc;
-    this.BidiCircleInfoData = this.BidiCircleInfoData.bind(this);
-    this.UnaryCircleInfoData = this.UnaryCircleInfoData.bind(this);
-    this.ServerStreamCircleInfoData =
-      this.ServerStreamCircleInfoData.bind(this);
-  }
-  BidiCircleInfoData(
-    request: Observable<CircleInfo>
-  ): Observable<CircleInfoList> {
-    const data = request.pipe(
-      map((request) => CircleInfo.encode(request).finish())
-    );
-    const result = this.rpc.bidirectionalStreamingRequest(
-      "AiiiGRPC.ToDoService",
-      "BidiCircleInfoData",
-      data
-    );
-    return result.pipe(
-      map((data) => CircleInfoList.decode(new _m0.Reader(data)))
-    );
-  }
-
-  UnaryCircleInfoData(request: CircleInfo): Promise<Empty> {
-    const data = CircleInfo.encode(request).finish();
-    const promise = this.rpc.request(
-      "AiiiGRPC.ToDoService",
-      "UnaryCircleInfoData",
-      data
-    );
-    return promise.then((data) => Empty.decode(new _m0.Reader(data)));
-  }
-
-  ServerStreamCircleInfoData(request: CircleInfo): Observable<CircleInfoList> {
-    const data = CircleInfo.encode(request).finish();
-    const result = this.rpc.serverStreamingRequest(
-      "AiiiGRPC.ToDoService",
-      "ServerStreamCircleInfoData",
-      data
-    );
-    return result.pipe(
-      map((data) => CircleInfoList.decode(new _m0.Reader(data)))
-    );
-  }
+export interface ToDoServiceClient<CallOptionsExt = {}> {
+  bidiCircleInfoData(
+    request: AsyncIterable<DeepPartial<CircleInfo>>,
+    options?: CallOptions & CallOptionsExt,
+  ): AsyncIterable<CircleInfoList>;
+  unaryCircleInfoData(request: DeepPartial<CircleInfo>, options?: CallOptions & CallOptionsExt): Promise<Empty>;
+  serverStreamCircleInfoData(
+    request: DeepPartial<CircleInfo>,
+    options?: CallOptions & CallOptionsExt,
+  ): AsyncIterable<CircleInfoList>;
 }
 
-interface Rpc {
-  request(
-    service: string,
-    method: string,
-    data: Uint8Array
-  ): Promise<Uint8Array>;
-  clientStreamingRequest(
-    service: string,
-    method: string,
-    data: Observable<Uint8Array>
-  ): Promise<Uint8Array>;
-  serverStreamingRequest(
-    service: string,
-    method: string,
-    data: Uint8Array
-  ): Observable<Uint8Array>;
-  bidirectionalStreamingRequest(
-    service: string,
-    method: string,
-    data: Observable<Uint8Array>
-  ): Observable<Uint8Array>;
-}
+type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-type Builtin =
-  | Date
-  | Function
-  | Uint8Array
-  | string
-  | number
-  | boolean
-  | undefined;
-
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
-
-type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & Record<
-        Exclude<keyof I, KeysOfUnion<P>>,
-        never
-      >;
-
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
-}
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
 }
+
+export type ServerStreamingMethodResult<Response> = { [Symbol.asyncIterator](): AsyncIterator<Response, void> };

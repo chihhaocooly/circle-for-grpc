@@ -1,10 +1,11 @@
-import { ServerWritableStream } from "grpc";
+import { CallContext } from "nice-grpc-common";
 import { newCircleInfos, newCircleInfoSubject } from "../../../cache/circleInfo";
-import { CircleInfo } from '../../../protos/action';
+import { CircleInfo, DeepPartial } from '../../../protos/action';
+import { Empty } from "../../../protos/google/protobuf/empty";
 
-export const UnaryCircleInfoData = async (call: ServerWritableStream<CircleInfo>,callback:any) => {
+export const unaryCircleInfoData = async (request: CircleInfo, context: CallContext): Promise<DeepPartial<Empty>>=> {
     
-    const circleInfo :CircleInfo= call.request;
+    const circleInfo :CircleInfo=request;
     console.log("circleInfo=>", circleInfo.colorCode)
 
     let originalCircleInfo = newCircleInfos.find(c => c.colorCode == circleInfo.colorCode);
@@ -22,6 +23,8 @@ export const UnaryCircleInfoData = async (call: ServerWritableStream<CircleInfo>
             originalCircleInfo.y = circleInfo.y
         }
     }
+
     newCircleInfoSubject.next(circleInfo);
-    callback(null);
+    
+    return Empty;
 }

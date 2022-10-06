@@ -1,22 +1,28 @@
-import { ServerWritableStream } from "grpc";
-import { CircleInfo } from '../../../protos/action';
+import { CircleInfo, CircleInfoList, DeepPartial } from '../../../protos/action';
 import { newCircleInfos, newCircleInfoSubject } from "../../../cache/circleInfo";
+import { CallContext } from "nice-grpc-common";
+import { from } from "ix/asynciterable";
+import { map, takeWhile, withAbort } from 'ix/asynciterable/operators';
 
-const callMap = new Map<string,any>();
-export const ServerStreamCircleInfoData = async (call: ServerWritableStream<CircleInfo>) => {
+export async function* serverStreamCircleInfoData(request: CircleInfo,
+    context: CallContext): AsyncIterable<DeepPartial<CircleInfoList>> {
+
     let colorCode = '';
 
-    const circleInfo :CircleInfo= call.request;
-    callMap.set(circleInfo.colorCode,call);
+    const circleInfo: CircleInfo = request;
+    colorCode = circleInfo.colorCode;
+    newCircleInfoSubject.next(circleInfo);
 
-    newCircleInfoSubject.subscribe(x => {
-        console.log(colorCode);
-
-        call.write({ circleInfos: newCircleInfos });
-
-        if (circleInfo.isFinish) {
-            let call = callMap.get(circleInfo.colorCode);
-            call.end();
+    yield* from(newCircleInfoSubject).pipe(withAbort(context.signal), takeWhile(s => {
+        if (s.isFinish &&  s.colorCode == circleInfo.colorCode) {
+            let index = newCircleInfos.findIndex(s => s.colorCode == circleInfo.colorCode);
+            if (index !== -1) {
+                newCircleInfos.splice(index, 1);
+            }
         }
-    });
+        return true;
+    }), map(s => {
+        return { circleInfos: newCircleInfos };
+    }));
 }
+
