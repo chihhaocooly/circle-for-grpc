@@ -6,7 +6,6 @@ import { Empty } from "../../../protos/google/protobuf/empty";
 export const unaryCircleInfoData = async (request: CircleInfo, context: CallContext): Promise<DeepPartial<Empty>>=> {
     
     const circleInfo :CircleInfo=request;
-    console.log("circleInfo=>", circleInfo)
 
     let originalCircleInfo = newCircleInfos.find(c => c.colorCode === circleInfo.colorCode);
     if (circleInfo.isFinish) {
