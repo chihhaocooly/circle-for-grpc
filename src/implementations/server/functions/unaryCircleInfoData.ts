@@ -6,12 +6,11 @@ import { Empty } from "../../../protos/google/protobuf/empty";
 export const unaryCircleInfoData = async (request: CircleInfo, context: CallContext): Promise<DeepPartial<Empty>>=> {
     
     const circleInfo :CircleInfo=request;
-    console.log("circleInfo=>", circleInfo.colorCode)
+    console.log("circleInfo=>", circleInfo)
 
-    let originalCircleInfo = newCircleInfos.find(c => c.colorCode == circleInfo.colorCode);
-
+    let originalCircleInfo = newCircleInfos.find(c => c.colorCode === circleInfo.colorCode);
     if (circleInfo.isFinish) {
-        let index = newCircleInfos.findIndex(s => s.colorCode == circleInfo.colorCode);
+        let index = newCircleInfos.findIndex(s => s.colorCode === circleInfo.colorCode);
         if (index !== -1) {
             newCircleInfos.splice(index, 1);
         }
@@ -24,6 +23,7 @@ export const unaryCircleInfoData = async (request: CircleInfo, context: CallCont
         }
     }
 
+    console.log({ circleInfos: newCircleInfos });
     newCircleInfoSubject.next(circleInfo);
     
     return Empty;
